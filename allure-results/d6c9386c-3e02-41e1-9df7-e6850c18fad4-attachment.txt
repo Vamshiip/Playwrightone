@@ -1,0 +1,23 @@
+Error {
+  message='Error: strict mode violation: locator("iframe[title='Secure payment input frame']") resolved to 2 elements:
+    1) <iframe scrolling="no" frameborder="0" role="presentatio…></iframe> aka locator("iframe[name=\"__privateStripeFrame10710\"]")
+    2) <iframe scrolling="no" frameborder="0" role="presentatio…></iframe> aka locator("iframe[name=\"__privateStripeFrame10711\"]")
+
+  name='Error
+  stack='Error: Error: strict mode violation: locator("iframe[title='Secure payment input frame']") resolved to 2 elements:
+    1) <iframe scrolling="no" frameborder="0" role="presentatio…></iframe> aka locator("iframe[name=\"__privateStripeFrame10710\"]")
+    2) <iframe scrolling="no" frameborder="0" role="presentatio…></iframe> aka locator("iframe[name=\"__privateStripeFrame10711\"]")
+
+    at CRExecutionContext.evaluateWithArguments (C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\server\chromium\crExecutionContext.js:92:33)
+    at async LongStandingScope._race (C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\utils\manualPromise.js:96:14)
+    at async evaluateExpression (C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\server\javascript.js:241:12)
+    at async FrameSelectors.resolveFrameForSelector (C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\server\frameSelectors.js:123:22)
+    at async FrameSelectors.resolveInjectedForSelector (C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\server\frameSelectors.js:152:22)
+    at async C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\server\frames.js:942:24
+    at async Frame.retryWithProgressAndTimeouts (C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\server\frames.js:917:24)
+    at async C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\server\frames.js:1165:14
+    at async ProgressController.run (C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\server\progress.js:82:22)
+    at async FrameDispatcher.selectOption (C:\Users\admin\AppData\Local\Temp\playwright-java-11932296408546876406\package\lib\server\dispatchers\frameDispatcher.js:242:15)
+}
+Call log:
+- waiting for frameLocator("iframe[title='Secure payment input frame']").getByRole(AriaRole.TEXTBOX, new FrameLocator.GetByRoleOptions().setName("Country"))

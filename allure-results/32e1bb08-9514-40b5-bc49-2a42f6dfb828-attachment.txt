@@ -1,0 +1,14 @@
+Error {
+  message='Target page, context or browser has been closed
+  name='TargetClosedError
+  stack='TargetClosedError: Target page, context or browser has been closed
+    at DispatcherConnection.dispatch (C:\Users\admin\AppData\Local\Temp\playwright-java-10105783214107216264\package\lib\server\dispatchers\dispatcher.js:375:15)
+}
+Call log:
+- waiting for getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Pay Now"))
+-   locator resolved to <button id="submit" class="button bg-green-500 hover:bg-…>…</button>
+- attempting click action
+-   waiting for element to be visible, enabled and stable
+-   element is visible, enabled and stable
+-   scrolling into view if needed
+-   done scrolling

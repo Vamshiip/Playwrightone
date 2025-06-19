@@ -1,0 +1,1 @@
+[{"uid":"f7eef0ef89036385","name":"WorkflowTest","time":{"start":1749711048496,"stop":1749711048496,"duration":0},"status":"broken","severity":"normal"},{"uid":"e9c915be2aab345c","name":"testEndToEndWorkflow()","time":{"start":1750312745462,"stop":1750312871034,"duration":125572},"status":"passed","severity":"normal"}]

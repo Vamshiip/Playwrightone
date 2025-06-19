@@ -1,0 +1,21 @@
+Error {
+  message='Target page, context or browser has been closed
+  name='TargetClosedError
+  stack='TargetClosedError:Target page, context or browser has been closed
+Error
+    at captureRawStack (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\utils\stackTrace.js:50:17)
+    at LongStandingScope._race (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\utils\manualPromise.js:91:52)
+    at LongStandingScope.race (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\utils\manualPromise.js:84:17)
+    at C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\utils\manualPromise.js:81:43
+    at Array.map (<anonymous>)
+    at LongStandingScope.raceMultiple (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\utils\manualPromise.js:81:32)
+    at Frame.retryWithProgressAndTimeouts (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\server\frames.js:913:40)
+    at async C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\server\frames.js:1002:29
+    at async ProgressController.run (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\server\progress.js:82:22)
+    at async FrameDispatcher.click (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\server\dispatchers\frameDispatcher.js:158:12)
+    at async LongStandingScope._race (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\utils\manualPromise.js:96:14)
+    at async FrameDispatcher._handleCommand (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\server\dispatchers\dispatcher.js:96:14)
+    at async DispatcherConnection.dispatch (C:\Users\admin\AppData\Local\Temp\playwright-java-6121824525784818969\package\lib\server\dispatchers\dispatcher.js:361:22)
+}
+Call log:
+- waiting for getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Close"))

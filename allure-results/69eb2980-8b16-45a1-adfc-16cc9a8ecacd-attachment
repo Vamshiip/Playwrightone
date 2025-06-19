@@ -1,0 +1,13 @@
+Error {
+  message='Target page, context or browser has been closed
+  name='TargetClosedError
+  stack='TargetClosedError:Target page, context or browser has been closed
+Error
+    at captureRawStack (C:\Users\admin\AppData\Local\Temp\playwright-java-14158425770711091128\package\lib\utils\stackTrace.js:50:17)
+    at LongStandingScope._race (C:\Users\admin\AppData\Local\Temp\playwright-java-14158425770711091128\package\lib\utils\manualPromise.js:91:52)
+    at LongStandingScope.race (C:\Users\admin\AppData\Local\Temp\playwright-java-14158425770711091128\package\lib\utils\manualPromise.js:84:17)
+    at FrameDispatcher._handleCommand (C:\Users\admin\AppData\Local\Temp\playwright-java-14158425770711091128\package\lib\server\dispatchers\dispatcher.js:96:36)
+    at DispatcherConnection.dispatch (C:\Users\admin\AppData\Local\Temp\playwright-java-14158425770711091128\package\lib\server\dispatchers\dispatcher.js:361:39)
+}
+Call log:
+- waiting for locator("#react-select-16-input")

@@ -1,0 +1,41 @@
+Error {
+  message='Error: strict mode violation: getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-")) resolved to 9 elements:
+    1) <a class="hover:underline" href="/order-details/102…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-23"))
+    2) <a class="hover:underline" href="/order-details/102…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-24"))
+    3) <a class="hover:underline" href="/order-details/103…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-33"))
+    4) <a class="hover:underline" href="/order-details/103…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-69"))
+    5) <a class="hover:underline" href="/order-details/104…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-79"))
+    6) <a class="hover:underline" href="/order-details/106…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-98"))
+    7) <a class="hover:underline" href="/order-details/106…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-102"))
+    8) <a class="hover:underline" href="/order-details/106…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-117"))
+    9) <a class="hover:underline" href="/order-details/106…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-122"))
+
+  name='Error
+  stack='Error: Error: strict mode violation: getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-")) resolved to 9 elements:
+    1) <a class="hover:underline" href="/order-details/102…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-23"))
+    2) <a class="hover:underline" href="/order-details/102…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-24"))
+    3) <a class="hover:underline" href="/order-details/103…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-33"))
+    4) <a class="hover:underline" href="/order-details/103…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-69"))
+    5) <a class="hover:underline" href="/order-details/104…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-79"))
+    6) <a class="hover:underline" href="/order-details/106…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-98"))
+    7) <a class="hover:underline" href="/order-details/106…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-102"))
+    8) <a class="hover:underline" href="/order-details/106…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-117"))
+    9) <a class="hover:underline" href="/order-details/106…>…</a> aka getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-122"))
+
+    at CRExecutionContext.evaluateWithArguments (C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\server\chromium\crExecutionContext.js:92:33)
+    at async LongStandingScope._race (C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\utils\manualPromise.js:96:14)
+    at async evaluateExpression (C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\server\javascript.js:241:12)
+    at async C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\server\frames.js:947:22
+    at async Frame.retryWithProgressAndTimeouts (C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\server\frames.js:917:24)
+    at async C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\server\frames.js:1002:29
+    at async ProgressController.run (C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\server\progress.js:82:22)
+    at async FrameDispatcher.click (C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\server\dispatchers\frameDispatcher.js:158:12)
+    at async LongStandingScope._race (C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\utils\manualPromise.js:96:14)
+    at async FrameDispatcher._handleCommand (C:\Users\admin\AppData\Local\Temp\playwright-java-6241655953212384580\package\lib\server\dispatchers\dispatcher.js:96:14)
+}
+Call log:
+- waiting for getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-"))
+-   locator resolved to <a class="hover:underline" href="/order-details/145…>…</a>
+- attempting click action
+-   waiting for element to be visible, enabled and stable
+- element was detached from the DOM, retrying

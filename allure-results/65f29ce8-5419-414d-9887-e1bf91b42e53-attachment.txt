@@ -1,0 +1,12 @@
+Error {
+  message='Timeout 30000ms exceeded.
+  name='TimeoutError
+  stack='TimeoutError: Timeout 30000ms exceeded.
+    at ProgressController.run (C:\Users\admin\AppData\Local\Temp\playwright-java-9414744487675543481\package\lib\server\progress.js:78:26)
+    at Frame.selectOption (C:\Users\admin\AppData\Local\Temp\playwright-java-9414744487675543481\package\lib\server\frames.js:1164:23)
+    at FrameDispatcher.selectOption (C:\Users\admin\AppData\Local\Temp\playwright-java-9414744487675543481\package\lib\server\dispatchers\frameDispatcher.js:242:33)
+    at FrameDispatcher._handleCommand (C:\Users\admin\AppData\Local\Temp\playwright-java-9414744487675543481\package\lib\server\dispatchers\dispatcher.js:94:40)
+    at DispatcherConnection.dispatch (C:\Users\admin\AppData\Local\Temp\playwright-java-9414744487675543481\package\lib\server\dispatchers\dispatcher.js:361:39)
+}
+Call log:
+- waiting for frameLocator("iframe[title='Secure payment input frame']").getByRole(AriaRole.TEXTBOX, new FrameLocator.GetByRoleOptions().setName("Country"))
