@@ -1,0 +1,45 @@
+# === Java & Maven ===
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# === Eclipse ===
+.project
+.classpath
+.settings/
+*.prefs
+
+# === IntelliJ IDEA ===
+.idea/
+*.iml
+*.iws
+out/
+
+# === Logs & Reports ===
+*.log
+logs/
+test-output/
+
+# === Playwright ===
+playwright-report/
+trace.zip
+videos/
+screenshots/
+test-results/
+*.json
+
+# === Allure Reports ===
+allure-results/
+allure-report/
+
+# === OS/System Files ===
+.DS_Store
+Thumbs.db
+
+# === Environment / Config ===
+.env
+*.local.json
+*.key
+*.pem
