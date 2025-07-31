@@ -9,6 +9,7 @@ import utils.OrderIDHandler;
 import utils.PlaywrightManager;
 
 import java.nio.file.Paths;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -25,28 +26,28 @@ public class ProfNewRequest {
 
     public void runFlow() {
         try {
-            Allure.step("Navigate to Sign-In page", () -> {
+        	safeStep("Navigate to Sign-In page", () -> {
                 page.navigate("https://yellow-dune-0dc4f8f1e.5.azurestaticapps.net/sign-in");
             });
 
-            Allure.step("Login with email and password", () -> {
+            safeStep("Login with email and password", () -> {
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Email")).fill("varun.prof@yopmail.com");
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Password")).fill("Test@123");
                 page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Sign In")).click();
             });
 
-            Allure.step("Close popup and go to 'New Document Request'", () -> {
+            safeStep("Close popup and go to 'New Document Request'", () -> {
                 page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Close")).click();
                 page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("New Document Request")).click();
             });
 
-            Allure.step("Fill personal and facility info", () -> {
+            safeStep("Fill personal and facility info", () -> {
                 page.getByRole(AriaRole.RADIO, new Page.GetByRoleOptions().setName("Medical Facility")).check();
                 page.locator(".css-1yt0726").click();
                 page.waitForTimeout(2000);
-                page.locator("#react-select-16-input").fill("veda");
+                page.locator("#react-select-14-input").fill("Veda");
                 page.keyboard().press("Enter");
-                page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Veda Medical Facility Green")).click();
+                page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Veda Medical Facility")).click();
 
                 page.locator(".select__input-container").click();
                 page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Authorization")).click();
@@ -59,28 +60,28 @@ public class ProfNewRequest {
                 page.getByText("78910111213").click();
             });
 
-            Allure.step("Upload Medical Document", () -> {
+            safeStep("Upload Medical Document", () -> {
                 page.locator("div").filter(new Locator.FilterOptions().setHasText(Pattern.compile("^Medical$"))).first().click();
                 page.locator("input[type='file']").nth(0).setInputFiles(Paths.get("D:\\NewEra_Automation\\EZROIFramework\\front.png"));
             });
 
-            Allure.step("Upload Billing Document", () -> {
+            safeStep("Upload Billing Document", () -> {
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Enter Internal Reference")).fill("M789");
                 page.getByRole(AriaRole.RADIO, new Page.GetByRoleOptions().setName("Select Date Range")).check();
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("From Date")).click();
-                page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Choose Monday, June 2nd,")).click();
+                page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Choose Tuesday, July 1st,")).click();
                 page.getByRole(AriaRole.CHECKBOX).first().check();
 
                 page.locator("div").filter(new Locator.FilterOptions().setHasText(Pattern.compile("^Billing$"))).first().click();
                 page.locator("input[type='file']").nth(1).setInputFiles(Paths.get("D:\\NewEra_Automation\\EZROIFramework\\front.png"));
             });
 
-            Allure.step("Upload X-Ray Document", () -> {
+            safeStep("Upload X-Ray Document", () -> {
                 page.getByRole(AriaRole.RADIO, new Page.GetByRoleOptions().setName("Select Date Range")).nth(1).check();
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("From Date")).nth(1).click();
-                page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Choose Sunday, June 1st,")).click();
+                page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Choose Tuesday, July 1st,")).click();
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("To Date")).nth(1).click();
-                page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Choose Wednesday, June 4th,")).click();
+                page.getByRole(AriaRole.OPTION, new Page.GetByRoleOptions().setName("Choose Thursday, July 3rd,")).click();
 
                 page.locator("div").filter(new Locator.FilterOptions().setHasText(Pattern.compile("^X-Ray$"))).first().click();
                 page.locator("input[type='file']").nth(2).setInputFiles(Paths.get("D:\\NewEra_Automation\\EZROIFramework\\front.png"));
@@ -88,20 +89,23 @@ public class ProfNewRequest {
                 page.locator("input[name=\"termsAndConditions\"]").check();
             });
 
-            Allure.step("Submit and pay", () -> {
+            safeStep("Submit and pay", () -> {
                 page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Continue")).click();
-                page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Pay and Submit")).click();
-                page.waitForTimeout(2000);
+       //         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Pay and Submit")).click();
+                page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Pay and Submit")).click(new Locator.ClickOptions().setTimeout(10000));
+
+       //         page.waitForTimeout(2000);
             });
 
-            Allure.step("Capture Order ID", () -> {
+            safeStep("Capture Order ID", () -> {
                 String text = page.locator("text=Payment for Order:").textContent().trim();
                 OrderIDHandler.captureAndStoreOrderIDsFromText(text);
                 System.out.println("📄 Found Order Text: " + text);
+                System.out.println("order to be processed: " +OrderIDHandler.getFirstOrderID());
                 System.out.println("🆔 Latest Order ID: " + OrderIDHandler.getLatestOrderID());
             });
 
-            Allure.step("Fill payment info in iframe", () -> {
+            safeStep("Fill payment info in iframe", () -> {
                 FrameLocator emailFrame = page.frameLocator("iframe[title='Secure email input frame']");
                 emailFrame.getByRole(AriaRole.TEXTBOX, new FrameLocator.GetByRoleOptions().setName("Email")).fill("varun.prof@yopmail.com");
 
@@ -109,6 +113,7 @@ public class ProfNewRequest {
                 cardFrame.getByRole(AriaRole.TEXTBOX, new FrameLocator.GetByRoleOptions().setName("Card number")).fill("4242 4242 4242 4242");
                 cardFrame.getByRole(AriaRole.TEXTBOX, new FrameLocator.GetByRoleOptions().setName("Expiration date MM / YY")).fill("06 / 29");
                 cardFrame.getByRole(AriaRole.TEXTBOX, new FrameLocator.GetByRoleOptions().setName("Security code")).fill("456");
+                page.waitForTimeout(3000);
             //    page.frameLocator("iframe[name=\"__privateStripeFrame1155\"]").getByLabel("Country").selectOption("US");
             //    cardFrame.getByRole(AriaRole.TEXTBOX, new FrameLocator.GetByRoleOptions().setName("Country")).selectOption("India");
             
@@ -118,23 +123,36 @@ public class ProfNewRequest {
             
              page.waitForTimeout(3000);
 
+             
                 Locator successPopup = page.locator("text=Payment Processed Successfully.");
-                successPopup.waitFor(new Locator.WaitForOptions().setTimeout(5000));
+                successPopup.waitFor(new Locator.WaitForOptions().setTimeout(10000));
             });
 
-            Allure.step("Sign out from account", () -> {
+            safeStep("Sign out from account", () -> {
                 page.locator("div").filter(new Locator.FilterOptions().setHasText(Pattern.compile("^Varun KumarCompanyAdmin$"))).nth(3).click();
                 page.getByRole(AriaRole.LISTITEM).filter(new Locator.FilterOptions().setHasText("Sign Out")).click();
             });
 
         } catch (Exception e) {
-            Allure.step("❌ Exception in ProfNewRequest flow", () -> {
+            safeStep("❌ Exception in ProfNewRequest flow", () -> {
                 Allure.addAttachment("Exception Message", e.getMessage());
                 logger.error("Error in ProfNewRequest", e);
                 throw e; // So test will fail
             });
         }
     }
+    private void safeStep(String name, Runnable stepLogic) {
+        try {
+            Allure.getLifecycle().startStep(UUID.randomUUID().toString(), new io.qameta.allure.model.StepResult().setName(name));
+            stepLogic.run();
+            Allure.getLifecycle().stopStep();
+        } catch (Exception e) {
+            System.out.println("❌ Error in step: " + name + " - " + e.getMessage());
+            Allure.getLifecycle().stopStep();
+            throw e;
+        }
+    }
+
 }
 
 

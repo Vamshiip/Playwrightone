@@ -3,6 +3,9 @@ package PlaywrightSessions.PlaywrightSessions;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 import io.qameta.allure.Allure;
+
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.OrderIDHandler;
@@ -18,7 +21,7 @@ public class FinalPayment {
 
     public void runFlow() {
         try {
-            Allure.step("Login to portal", () -> {
+            safeStep("Login to portal", () -> {
                 page.navigate("https://yellow-dune-0dc4f8f1e.5.azurestaticapps.net/sign-in");
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Email")).fill("varun.prof@yopmail.com");
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Password")).fill("Test@123");
@@ -27,20 +30,27 @@ public class FinalPayment {
                 page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Close")).click();
             });
 
-            Allure.step("Search for Order ID", () -> {
+            safeStep("Search for Order ID", () -> {
                 String orderID = OrderIDHandler.getFirstOrderID();
                 Locator searchBox = page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Search..."));
                 searchBox.click();
                 searchBox.fill(orderID);
+                System.out.println("Payment for order id: " +orderID);
                 searchBox.press("Enter");
-                page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-")).click();
+                Locator orderLink = page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName(orderID));
+                orderLink.waitFor(new Locator.WaitForOptions().setTimeout(5000));
+                orderLink.click();
+
+          //      page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-")).last().click();
+               
+
             });
 
-            Allure.step("Open payment screen", () -> {
+            safeStep("Open payment screen", () -> {
                 page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Make Payment")).click();
             });
 
-            Allure.step("Fill payment form", () -> {
+            safeStep("Fill payment form", () -> {
                 FrameLocator emailFrame = page.frameLocator("iframe[title='Secure email input frame']");
                 emailFrame.getByRole(AriaRole.TEXTBOX, new FrameLocator.GetByRoleOptions().setName("Email")).fill("varun.prof@yopmail.com");
 
@@ -53,12 +63,12 @@ public class FinalPayment {
                 page.waitForTimeout(3000);
             });
 
-            Allure.step("Wait for payment success", () -> {
+            safeStep("Wait for payment success", () -> {
                 Locator successPopup = page.locator("text=Payment Processed Successfully.");
                 successPopup.waitFor(new Locator.WaitForOptions().setTimeout(5000));
             });
 
-            Allure.step("Download final document", () -> {
+            safeStep("Download final document", () -> {
                 Download download = page.waitForDownload(() -> {
                     page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Download")).click();
                 });
@@ -66,13 +76,25 @@ public class FinalPayment {
             });
 
         } catch (Exception e) {
-            Allure.step("❌ Exception in FinalPayment flow", () -> {
+            safeStep("❌ Exception in FinalPayment flow", () -> {
                 Allure.addAttachment("Error", e.getMessage());
                 logger.error("Error in FinalPayment", e);
                 throw e;
             });
         }
     }
+    private void safeStep(String name, Runnable stepLogic) {
+        try {
+            Allure.getLifecycle().startStep(UUID.randomUUID().toString(), new io.qameta.allure.model.StepResult().setName(name));
+            stepLogic.run();
+            Allure.getLifecycle().stopStep();
+        } catch (Exception e) {
+            System.out.println("❌ Error in step: " + name + " - " + e.getMessage());
+            Allure.getLifecycle().stopStep();
+            throw e;
+        }
+    }
+
 }
 
 

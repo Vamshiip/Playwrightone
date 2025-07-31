@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import utils.OrderIDHandler;
 
 import java.nio.file.Paths;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class FacilityWorkflow {
@@ -21,7 +22,7 @@ public class FacilityWorkflow {
 
     public void runFlow() {
         try {
-            Allure.step("Facility Login", () -> {
+            safeStep("Facility Login", () -> {
                 page.navigate("https://yellow-dune-0dc4f8f1e.5.azurestaticapps.net/sign-in");
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Email")).fill("vamshi.bo@yopmail.com");
                 page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Password")).fill("Test@123");
@@ -29,16 +30,17 @@ public class FacilityWorkflow {
                 page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Skip")).click();
             });
 
-            Allure.step("Search and Open Order ID", () -> {
+            safeStep("Search and Open Order ID", () -> {
                 String orderID = OrderIDHandler.getFirstOrderID();
                 Locator searchBox = page.getByRole(AriaRole.BANNER).getByRole(AriaRole.TEXTBOX, new Locator.GetByRoleOptions().setName("Search..."));
                 searchBox.click();
                 searchBox.fill(orderID);
+                System.out.println(orderID);
                 searchBox.press("Enter");
                 page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("QIX-")).click();
             });
 
-            Allure.step("Approve Order", () -> {
+            safeStep("Approve Order", () -> {
                 page.locator("div")
                     .filter(new Locator.FilterOptions().setHasText(Pattern.compile("^Internal Status\\*Select the Current Status$")))
                     .getByRole(AriaRole.IMG)
@@ -49,7 +51,7 @@ public class FacilityWorkflow {
                 System.out.println("Status Approved");
             });
 
-            Allure.step("Upload Medical File", () -> {
+            safeStep("Upload Medical File", () -> {
                 page.getByRole(AriaRole.TAB, new Page.GetByRoleOptions().setName("Files")).click();
                 page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Upload")).click();
                 Locator input = page.locator("input[name='files[]']:not([webkitdirectory])");
@@ -61,10 +63,36 @@ public class FacilityWorkflow {
                 System.out.println("File Upload success");
             });
 
-            Allure.step("Generate Final PDF", () -> {
+            safeStep("Generate Final PDF", () -> {
                 Locator generatePdfButton = page.locator("text=Generate PDF");
                 generatePdfButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
                 generatePdfButton.click();
+            	
+            	//==============
+            	// Retry click if not enabled yet
+            	boolean pdfClicked = false;
+            	for (int i = 0; i < 5; i++) {
+            	    if (generatePdfButton.isEnabled()) {
+            	        try {
+            	            generatePdfButton.click(new Locator.ClickOptions().setForce(true));
+            	            pdfClicked = true;
+            	            System.out.println("Clicked on Generate PDF.");
+            	            break;
+            	        } catch (PlaywrightException e) {
+            	            System.out.println("Generate PDF click failed, retrying... " + e.getMessage());
+            	        }
+            	    }
+            	    page.waitForTimeout(1000); // Wait 1 sec before retry
+            	}
+
+            	if (!pdfClicked) {
+            	    System.out.println("Generate PDF button was not enabled or clickable after retries. Skipping click.");
+            	}
+
+            	// Now wait for a brief moment before refreshing to ensure server starts generating
+            	page.waitForTimeout(2000);       	
+            	
+            	//==============
                 
 
                 Locator finalRecordsText = page.locator("text=Final Records");
@@ -81,16 +109,16 @@ public class FacilityWorkflow {
                     refreshButton.click();
                     page.waitForTimeout(4000);
                     attempt++;
+                   
                 }
 
                 if (!finalRecordsText.isVisible()) {
                     System.out.println("❌ Final Records not found after " + maxAttempts + " attempts.");
                 }
 
-                System.out.println("Final PDF generated");
             });
 
-            Allure.step("Send Invoice Email", () -> {
+            safeStep("Send Invoice Email", () -> {
                 page.getByRole(AriaRole.TAB, new Page.GetByRoleOptions().setName("Invoice")).click();
                 page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Default Invoice Data")).click();
                 page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Email Invoice")).click();
@@ -99,19 +127,31 @@ public class FacilityWorkflow {
                 page.waitForTimeout(2000);
             });
 
-            Allure.step("Sign Out", () -> {
+            safeStep("Sign Out", () -> {
                 page.locator("div.dropdown-toggle >> svg").click();
                 page.locator("li:has-text('Sign Out')").click();
             });
 
         } catch (Exception e) {
-            Allure.step("❌ Exception in FacilityWorkflow", () -> {
+            safeStep("❌ Exception in FacilityWorkflow", () -> {
                 Allure.addAttachment("Error", e.getMessage());
                 logger.error("Error in FacilityWorkflow", e);
                 throw e;
             });
         }
     }
+    private void safeStep(String name, Runnable stepLogic) {
+        try {
+            Allure.getLifecycle().startStep(UUID.randomUUID().toString(), new io.qameta.allure.model.StepResult().setName(name));
+            stepLogic.run();
+            Allure.getLifecycle().stopStep();
+        } catch (Exception e) {
+            System.out.println("❌ Error in step: " + name + " - " + e.getMessage());
+            Allure.getLifecycle().stopStep();
+            throw e;
+        }
+    }
+
 }
 
 

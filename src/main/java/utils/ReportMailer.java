@@ -6,30 +6,65 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
 public class ReportMailer {
 
-    public static void sendReport() {
-        final String fromEmail = "vamshi.qa6@gmail.com"; // Replace with your email
-        final String password = "fmpl qtni nsnq sfvl";     // App-specific password
-        final String toEmail = "vamshi.qa6@gmail.com";
+    public static final String fromEmail = "vamshi.qa6@gmail.com"; // Replace with your email
+    public static final String password = "fmpl qtni nsnq sfvl";        // App-specific password
+    public static final String toEmail = "vamshi.qa6@gmail.com";
 
-        
+    public static void sendSummaryReport() {
+        String summaryPath = "allure-report/widgets/summary.json";
+
         try {
-            // 1. Load summary.json
-            String summaryContent = Files.readString(Paths.get("allure-report/widgets/summary.json"));
-            JSONObject summaryStats = new JSONObject(summaryContent).getJSONObject("statistic");
+            Path path = Paths.get(summaryPath);
 
-            int total = summaryStats.getInt("total");
-            int passed = summaryStats.getInt("passed");
-            int failed = summaryStats.getInt("failed");
-            int skipped = summaryStats.getInt("skipped");
+            if (!Files.exists(path)) {
+                System.out.println("⚠️ summary.json not found. Skipping email sending.");
+                return;
+            }
 
-            // 2. Create styled HTML body with table layout
+            String summaryContent = Files.readString(path).trim();
+
+            if (!summaryContent.startsWith("{")) {
+                System.out.println("⚠️ Invalid summary.json content. Skipping email.");
+                return;
+            }
+
+            JSONObject root = new JSONObject(summaryContent);
+
+            int total = 0, passed = 0, failed = 0, skipped = 0;
+            String title = "✅ Allure Test Execution Summary";
+
+            // ✅ Try items[0].statistic first
+            JSONObject statBlock = null;
+            JSONArray items = root.optJSONArray("items");
+            if (items != null && items.length() > 0) {
+                statBlock = items.getJSONObject(0).optJSONObject("statistic");
+            }
+
+            // 🛡 Fallback to top-level "statistic"
+            if (statBlock == null) {
+                statBlock = root.optJSONObject("statistic");
+            }
+
+            if (statBlock != null) {
+                total = statBlock.optInt("total", 0);
+                passed = statBlock.optInt("passed", 0);
+                failed = statBlock.optInt("failed", 0);
+                skipped = statBlock.optInt("skipped", 0);
+            }
+
+            if (failed > 0) {
+                title = "❌ Test Execution: Some Tests Failed";
+            }
+
+            // 📬 Prepare email content
             StringBuilder body = new StringBuilder();
-            body.append("<h2 style='color:green;'>✅ Test Execution Summary</h2>")
+            body.append("<h2>").append(title).append("</h2>")
                 .append("<table border='1' cellpadding='10' cellspacing='0' style='border-collapse: collapse; text-align: center;'>")
                 .append("<tr style='background-color:#f2f2f2;'>")
                 .append("<th>Total</th><th style='color:green;'>Passed</th><th style='color:red;'>Failed</th><th style='color:orange;'>Skipped</th>")
@@ -42,15 +77,12 @@ public class ReportMailer {
                 .append("</tr>")
                 .append("</table><br>");
 
-            // 3. Add report link (update if hosted remotely)
             body.append("<p><a href='file:///")
                 .append(Paths.get("allure-report/index.html").toAbsolutePath().toString().replace("\\", "/"))
-                .append("' target='_blank'>🔍 View Full Report</a></p>");
+                .append("' target='_blank'>🔍 View Full Report</a></p>")
+                .append("<p>Regards,<br><b>Automation Team</b></p>");
 
-            // 4. Footer
-            body.append("<p>Regards,<br><b>Automation Team</b></p>");
-
-            // 5. Mail setup
+            // ✉️ Send mail
             Properties props = new Properties();
             props.put("mail.smtp.host", "smtp.gmail.com");
             props.put("mail.smtp.port", "587");
@@ -63,11 +95,10 @@ public class ReportMailer {
                 }
             });
 
-            // 6. Send email
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(fromEmail));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject("✅ Allure Test Execution Summary");
+            message.setSubject(title);
             message.setContent(body.toString(), "text/html");
 
             Transport.send(message);
@@ -78,8 +109,8 @@ public class ReportMailer {
             e.printStackTrace();
         }
     }
-}
 
+}
 
 
 
